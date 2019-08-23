@@ -1,0 +1,66 @@
+<div id="page-wrapper" class="container-fluid">
+<div class="row gotest-title">
+    <div class="col-lg-2 col-sm-1">
+    </div>
+    <div class="col-lg-8 col-sm-10 col-xs-12">
+
+        <div class="row align-items-end">
+            <div class="col">
+            </div>
+            <div class="col">
+<h1 class="text-center">GoTest#{{ name }}</h1>
+            </div>
+
+            <div class="col text-right">
+                <span class="">
+                    {{ run.testPassCount }} / {{ run.testCount }}
+                    {{#if run.testSkipCount > 0 }}
+                    <span class="test-skipped">({{ run.testSkipCount }} skipped)</span>
+                    {{/if}}
+                </span>
+
+                {{#if run.testFailCount > 0 }}
+                <span class="badge badge-pill badge-danger runs-table">Failure</span>
+                {{else}}
+                <span class="badge badge-pill badge-success runs-table">Success</span>
+                {{/if}}
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-2 col-sm-1">
+    </div>
+</div>
+
+{{#if run.errorlist.length > 0 }}
+<div class="row">
+    <div class="col-lg-2 col-sm-1">
+    </div>
+    <div class="col-lg-8 col-sm-10 col-xs-12">
+        <pre class="alert alert-danger" role="alert">
+{{#each run.errorlist}}{{ line }}
+{{/each}}</pre>
+    </div>
+    <div class="col-lg-2 col-sm-1">
+    </div>
+</div>
+{{/if}}
+
+{{#each run.packages:i}}
+{{#each .tests:j}}
+{{#with String(i).concat("-",j) as testkey}}
+<div class="row {{#if hasLongContent}}margin-row{{/if}} {{#if .status === "FAIL"}}no-margin{{/if}}" id="test-margin-row-{{ testkey }}">
+    <div class="col-lg-2 col-sm-1 test-margin">
+    </div>
+    <div class="col">
+
+{{>test testkey as key}}
+
+    </div>
+    <div class="col-lg-2 col-sm-1 test-margin">
+    </div>
+</div>
+{{/with}}
+{{/each}}
+{{/each}}
+</div>

@@ -1,0 +1,76 @@
+<div class="row gotest-header {{#if .type === 'TestSummary' }}gotest-pkg-summary{{/if}}">
+    <div class="col">
+	<a {{#if .opencollapsed }}class="collapsed"{{/if}} data-toggle="collapse" href="#testContainer-{{ key }}" 
+	  role="button" aria-expanded="true" aria-controls="testContainer-{{ key }}"
+	  margin-target="#test-margin-row-{{ testkey }}" margin-source="#testContainer-{{ testkey }}"
+	  on-click="@this.fire( 'switch-margins', @context)" >
+	    {{ .name }}
+	    <span class="test-openner"><i class="fas fa-angle-down"></i></span>
+	    <span class="test-closer"><i class="fas fa-angle-up"></i></span>
+	</a>
+	{{#if .hasSubtests}}
+	<a {{#if .opencollapsed }}class="collapsed"{{/if}} data-toggle="collapse" href="#testContainer-{{ key }}"
+	  role="button" aria-expanded="true" aria-controls="testContainer-{{ key }}"
+	  margin-target="#test-margin-row-{{ testkey }}" margin-source="#testContainer-{{ testkey }}"
+	  on-click="@this.fire( 'open-subtests', @context),@this.fire( 'switch-margins', @context)" >
+	    <span class="test-openner"><i class="fas fa-angle-double-down"></i></span>
+	    <span class="test-closer"><i class="fas fa-angle-double-up"></i></span>
+	</a>
+	{{/if}}
+    </div>
+
+    <div class="col">
+	<span class="test-package">{{ package }}</span>
+    </div>
+
+    <div class="col text-right">
+    {{#if .summaryDetail }}<span class="test-duration">{{ .summaryDetail }}</span>{{/if}}
+    {{#if .duration }}<span class="test-duration">{{ .duration }}s</span>{{/if}}
+    {{#if .status === "FAIL"}}
+    <span class="badge badge-pill badge-danger">Failure</span>
+    {{elseif .status === "SKIP"}}
+    <span class="badge badge-pill badge-secondary">Skip</span>
+    {{elseif .status === "PASS"}}
+    <span class="badge badge-pill badge-success">Success</span>
+    {{else}}
+    <span class="badge badge-pill badge-warning">Running...</span>
+    {{/if}}
+    </div>
+</div>
+
+<div class="collapse {{#unless .opencollapsed }}show{{/unless}}" id="testContainer-{{ key }}">
+    <div class="row">
+	<div class="col">
+	    <div class="test-headline">
+		Started at {{ .startDate }}{{#if .endDate }} and finished at {{ .endDate }}{{/if}}
+	    </div>
+	</div>
+    </div>
+    <div class="row">
+	<div class="col{{#if .asciicasts.length }} test-asciicasts-side{{/if}}">
+	    <div class="test-details">
+		{{#each groupEmbed:k}}
+		{{#if .type === 'Output' }}
+		<pre><span on-click="@this.fire( 'seek-asciinema', @context, time)" time="{{ .time }}">{{ .output }}</span></pre>
+		{{elseif .type === 'OutputGroup' }}
+		<pre>{{#each .outputs}}<span on-click="@this.fire( 'seek-asciinema', @context, time)" time="{{ .time }}">{{ .output }}</span>{{/each}}</pre>
+		{{elseif .type === 'Test' }}
+		<div class=" subtest">
+		    {{>test String(key).concat("-",k) as key}}
+		</div>
+		{{/if}}
+		{{/each}}
+	    </div>
+	</div>
+	{{#if .asciicasts.length }}
+	<div class="col text-center test-asciicast-container">
+	    {{#each .asciicasts}}
+	    <div class="test-asciicast">
+		{{{ .tag }}}
+		<hr/>
+	    </div>
+	    {{/each}}
+	</div>
+	{{/if}}
+    </div>
+</div>
