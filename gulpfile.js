@@ -11,38 +11,35 @@ var sourcemaps = require('gulp-sourcemaps');
 
 var jsFiles = 'src/js/*.js';
 
-gulp.task('lint', function() {
-  return gulp.src(jsFiles)
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'));
-});
+function lint() {
+    return gulp.src(jsFiles)
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+}
+gulp.task('lint', lint);
 
 // Compile LESS files from /less into /css
-gulp.task('less', function() {
+function less_css() {
     return gulp.src('src/less/main.less')
         .pipe(sourcemaps.init())
         .pipe(less())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist/css'))
-        .pipe(browserSync.reload({
-            stream: true
-        }))
-});
+}
+gulp.task('less', less_css);
 
 // Minify compiled CSS
-gulp.task('minify-css', ['less'], function() {
+function minify_css() {
     return gulp.src('dist/css/main.css')
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(cleanCSS({ compatibility: 'ie8' }))
         .pipe(rename({ suffix: '.min' }))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist/css'))
-        .pipe(browserSync.reload({
-            stream: true
-        }))
-});
+}
+gulp.task('minify-css', gulp.series(less_css, minify_css));
 
-gulp.task('minify-js', ['copy-lib'], function () {
+function optimize_js() {
     return gulp.src('src/js/app.js')
         .pipe(sourcemaps.init())
         .pipe(requirejsOptimize({
@@ -61,27 +58,19 @@ gulp.task('minify-js', ['copy-lib'], function () {
         .pipe(rename({ suffix: '.min' }))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist/js'))
-        .pipe(browserSync.reload({
-            stream: true
-        }))
-});
+}
+gulp.task('minify-js', gulp.series(copy_lib, optimize_js));
 
 // Copy pages to dist
-gulp.task('copy-html', function() {
-
-    gulp.src(['*.html'])
+function copy_html() {
+    return gulp.src(['*.html'])
         .pipe(gulp.dest('dist'))
-})
+}
 
-// Copy pages to dist
-gulp.task('copy-images', function() {
-    gulp.src(['src/images/**/*'])
-        .pipe(gulp.dest('dist/images'))
-})
+gulp.task('copy-html', copy_html)
 
 // Copy vendor libraries from /node_modules into /vendor
-gulp.task('copy-lib', function() {
-
+function copy_lib(done) {
     gulp.src(['node_modules/bootstrap/dist/**/*', '!**/npm.js', '!**/bootstrap-theme.*', '!**/*.map'])
         .pipe(gulp.dest('dist/vendor/bootstrap'))
 
@@ -96,13 +85,15 @@ gulp.task('copy-lib', function() {
 
     gulp.src(['node_modules/asciinema-player/resources/public/js/asciinema-player.js', 'node_modules/asciinema-player/resources/public/css/asciinema-player.css'])
         .pipe(gulp.dest('dist/vendor/asciinema'))
-})
+    done()
+}
+gulp.task('copy-lib', copy_lib)
 
 // Run everything
-gulp.task('default', ['lint', 'copy-lib', 'minify-css', 'minify-js', 'copy-images', 'copy-html']);
+gulp.task('default', gulp.parallel(lint, gulp.series(less_css, minify_css), gulp.series(copy_lib, optimize_js), copy_html))
 
-// Configure the browserSync task
-gulp.task('browserSync', function() {
+//Browser sync init
+function browser_sync() {
     browserSync.init({
         ui: {
             port: 3001,
@@ -120,21 +111,28 @@ gulp.task('browserSync', function() {
             },
         ]
     })
-})
+}
 
-// Dev task with browserSync
-gulp.task('dev', ['default', 'browserSync'], function() {
-    gulp.watch('src/less/*.less', ['less']);
-    gulp.watch('src/images/*', ['copy-images']);
-    gulp.watch('src/pages/*.html', ['minify-js']);
-    gulp.watch('*.html', ['copy-html']);
-    gulp.watch('src/js/*.js', ['minify-js']);
+//Browser sync reload function
+function reload(done) {
+    browserSync.reload()
+    done()
+}
 
-    gulp.watch('dist/css/*.css', ['minify-css']);
+// Watch for changes
+function watch_files() {
+    gulp.watch('src/less/*.less', gulp.series(less_css, minify_css));
+    gulp.watch('*.html', copy_html);
+    gulp.watch('src/pages/*.html', optimize_js);
+    gulp.watch('src/js/*.js', optimize_js);
 
     // Reloads the browser whenever HTML or JS files change
-    gulp.watch('dist/css/*.css', browserSync.reload);
-    gulp.watch('dist/pages/*.html', browserSync.reload);
-    gulp.watch('dist/*.html', browserSync.reload);
-    gulp.watch('dist/js/*.js', browserSync.reload);
-});
+    gulp.watch('dist/css/*.css', reload);
+    gulp.watch('dist/*.html', reload);
+    gulp.watch('dist/js/*.js', reload);
+}
+
+// Dev task with browserSync
+//gulp.task('dev', gulp.parallel(lint, gulp.series(less_css, minify_css), gulp.series(copy_lib, optimize_js), copy_html, watch_files, browser_sync))
+gulp.task('dev', gulp.series('default', gulp.parallel(watch_files, browser_sync)))
+
