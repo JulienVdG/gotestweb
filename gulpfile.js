@@ -47,15 +47,15 @@ gulp.task('minify-js', ['copy-lib'], function () {
         .pipe(sourcemaps.init())
         .pipe(requirejsOptimize({
             wrap: true,
-            name: '../../bower_components/almond/almond',
+            name: '../../node_modules/almond/almond',
             include: 'app',
             paths: {
-                text: '../../bower_components/requirejs-text/text',
-                Ractive: '../../bower_components/ractive/ractive.min',
-                signals: '../../bower_components/js-signals/dist/signals.min',
-                hasher: '../../bower_components/hasher/dist/js/hasher.min',
-                moment: '../../bower_components/moment/min/moment-with-locales.min',
-                underscore: '../../bower_components/underscore/underscore-min',
+                text: '../../node_modules/requirejs-text/text',
+                Ractive: '../../node_modules/ractive/ractive.min',
+                signals: '../../node_modules/signals/dist/signals.min',
+                hasher: '../../node_modules/hasher/dist/js/hasher.min',
+                moment: '../../node_modules/moment/min/moment-with-locales.min',
+                underscore: '../../node_modules/underscore/underscore-min',
             }
         }))
         .pipe(rename({ suffix: '.min' }))
@@ -79,19 +79,19 @@ gulp.task('copy-images', function() {
         .pipe(gulp.dest('dist/images'))
 })
 
-// Copy vendor libraries from /bower_components into /vendor
+// Copy vendor libraries from /node_modules into /vendor
 gulp.task('copy-lib', function() {
 
-    gulp.src(['bower_components/bootstrap/dist/**/*', '!**/npm.js', '!**/bootstrap-theme.*', '!**/*.map'])
+    gulp.src(['node_modules/bootstrap/dist/**/*', '!**/npm.js', '!**/bootstrap-theme.*', '!**/*.map'])
         .pipe(gulp.dest('dist/vendor/bootstrap'))
 
-    gulp.src(['bower_components/font-awesome/advanced-options/use-with-node-js/fontawesome-free/css/all.min.css'])
+    gulp.src(['node_modules/@fortawesome/fontawesome-free/css/all.min.css'])
         .pipe(gulp.dest('dist/vendor/font-awesome/css/'))
 
-    gulp.src(['bower_components/font-awesome/advanced-options/use-with-node-js/fontawesome-free/webfonts/**/*'])
+    gulp.src(['node_modules/@fortawesome/fontawesome-free/webfonts/**/*'])
         .pipe(gulp.dest('dist/vendor/font-awesome/webfonts'))
 
-    gulp.src(['bower_components/jquery/dist/jquery.js', 'bower_components/jquery/dist/jquery.min.js'])
+    gulp.src(['node_modules/jquery/dist/jquery.js', 'node_modules/jquery/dist/jquery.min.js'])
         .pipe(gulp.dest('dist/vendor/jquery'))
 
     gulp.src(['node_modules/asciinema-player/resources/public/js/asciinema-player.js', 'node_modules/asciinema-player/resources/public/css/asciinema-player.css'])
