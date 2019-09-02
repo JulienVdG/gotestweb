@@ -63,6 +63,7 @@ define(['ractive', 'client', 'logger', 'moment', 'underscore'], function(ractive
 	    packageMap: new Map(),
 	    pkgsummary: params.summary,
 	    asciicastURL: params.asciicast,
+	    scriptreplayURL: params.scriptreplay,
 	};
 
 	if (params.live) {
@@ -317,6 +318,17 @@ define(['ractive', 'client', 'logger', 'moment', 'underscore'], function(ractive
 		    }
 		    pkg.tests[path[0]].hasLongContent = true;
 		    embed.html = "*** Asciicast '<a href=\""+url+"\" download=\""+name+".cast\">"+name+".cast</a>' "+m[3]+"\n";
+		}
+
+		// Parse ScripReplay
+		var replayRE = RegExp('\\*\\*\\* ScriptReplay \'.*/(.*\\.log)\' \\(.*/(.*\\.tim)\\) (start|end)');
+		var m = replayRE.exec(testevent.Output);
+		if (m) {
+		    var log = m[1];
+		    var tim = m[2];
+		    var logurl = run.scriptreplayURL + m[1];
+		    var timurl = run.scriptreplayURL + m[2];
+		    embed.html = "*** ScriptReplay '<a href=\""+logurl+"\" download=\""+log+"\">"+log+"</a>' (<a href=\""+timurl+"\" download=\""+tim+"\">tim</a>) "+m[3]+"\n";
 		}
 
 		// Add the output to a group

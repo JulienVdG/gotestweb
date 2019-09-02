@@ -120,13 +120,17 @@ define('app', ['ractive', 'hasher', 'logger', 'underscore', 'run'], function(rac
 	var asciicast = dir;
 	if (SCRIPT_PARAM.hasOwnProperty('asciicast')) { asciicast = SCRIPT_PARAM.asciicast + '/'; }
 	if (parsedHash.params.hasOwnProperty('asciicast')) { asciicast = parsedHash.params.asciicast + '/'; }
+	var scriptreplay = dir;
+	if (SCRIPT_PARAM.hasOwnProperty('scriptreplay')) { scriptreplay = SCRIPT_PARAM.scriptreplay + '/'; }
+	if (parsedHash.params.hasOwnProperty('scriptreplay')) { scriptreplay = parsedHash.params.scriptreplay + '/'; }
 
 	return {
 	    live: live,
 	    file: file,
 	    dir: dir,
 	    summary: summary,
-	    asciicast: asciicast
+	    asciicast: asciicast,
+	    scriptreplay: scriptreplay
 	};
     }
 

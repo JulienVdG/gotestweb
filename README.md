@@ -19,12 +19,13 @@ The js app accepts parameters in two forms:
 
 The URL parameter override the attributes parameters.
 
-| Parameter   | Usage |
-| ----------- | ----- |
-| `file`      | `file` is the path to the line separated JSON file to render. |
-| `asciicast` | `asciicast` is the directory path to find asciicast files. It default to the directory part of `file`. |
-| `summary`   | `summary` display a package summary above all tests for the same package. |
-| `live`      | live mode: in live mode `file` is ignored, `summary` default to on and the content is fetched from a websocket at `/live`. |
+| Parameter      | Usage |
+| -------------- | ----- |
+| `file`         | `file` is the path to the line separated JSON file to render. |
+| `asciicast`    | `asciicast` is the directory path to find asciicast files. It default to the directory part of `file`. |
+| `scriptreplay` | `scriptreplay` is the directory path to find scriptreplay files. It default to the directory part of `file`. |
+| `summary`      | `summary` display a package summary above all tests for the same package. |
+| `live`         | live mode: in live mode `file` is ignored, `summary` default to on and the content is fetched from a websocket at `/live`. |
 
 Typical URL parameter has the form `#path-to-file?param=value&param2=value`
 Where `path-to-file` replace the value for the `file` parameter.
