@@ -316,6 +316,7 @@ define(['ractive', 'client', 'logger', 'moment', 'underscore'], function(ractive
 			cast.tag = '<asciinema-player id="cast-' + name + '" src="' + url + '" preload="yes"></asciinema-player>';
 		    }
 		    pkg.tests[path[0]].hasLongContent = true;
+		    embed.html = "*** Asciicast '<a href=\""+url+"\" download=\""+name+".cast\">"+name+".cast</a>' "+m[3]+"\n";
 		}
 
 		// Add the output to a group

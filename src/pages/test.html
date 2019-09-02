@@ -51,9 +51,9 @@
 	    <div class="test-details">
 		{{#each groupEmbed:k}}
 		{{#if .type === 'Output' }}
-		<pre><span on-click="@this.fire( 'seek-asciinema', @context, time)" time="{{ .time }}">{{ .output }}</span></pre>
+		<pre><span on-click="@this.fire( 'seek-asciinema', @context, time)" time="{{ .time }}">{{#if .html }}{{{ .html }}}{{ else }}{{ .output }}{{/if}}</span></pre>
 		{{elseif .type === 'OutputGroup' }}
-		<pre>{{#each .outputs}}<span on-click="@this.fire( 'seek-asciinema', @context, time)" time="{{ .time }}">{{ .output }}</span>{{/each}}</pre>
+		<pre>{{#each .outputs}}<span on-click="@this.fire( 'seek-asciinema', @context, time)" time="{{ .time }}">{{#if .html }}{{{ .html }}}{{ else }}{{ .output }}{{/if}}</span>{{/each}}</pre>
 		{{elseif .type === 'Test' }}
 		<div class=" subtest">
 		    {{>test String(key).concat("-",k) as key}}
