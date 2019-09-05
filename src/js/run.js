@@ -1,4 +1,4 @@
-define(['ractive', 'client', 'logger', 'moment', 'underscore'], function(ractive, client, logger, moment, _) {
+define(['ractive', 'client', 'logger', 'moment'], function(ractive, client, logger, moment) {
 
     var ws;
 
@@ -140,6 +140,7 @@ define(['ractive', 'client', 'logger', 'moment', 'underscore'], function(ractive
     function TestPackage(name) {
 	this.package = name;
 	this.testMap = new Map();
+	this.castMap = new Map();
 	this.tests = [];
     }
     TestPackage.prototype.TestFromPath = function(path) {
@@ -300,17 +301,21 @@ define(['ractive', 'client', 'logger', 'moment', 'underscore'], function(ractive
 		    var name = m[2];
 		    var url = run.asciicastURL + m[1];
 		    var cast;
-		    var cid = _.findIndex(test.asciicasts, function(c){return c.name === name; });
-		    if (cid == -1) {
+		    if (!pkg.castMap.has(name)) {
 			cast = {
 			    type: "Asciicast",
 			    name: name,
 			    url: url,
 			    time: testevent.Time,
 			};
-			test.asciicasts.push(cast);
+			var cid = test.asciicasts.push(cast) - 1;
+			var castPath = path.concat([cid]);
+			pkg.castMap.set(name, castPath);
 		    } else {
-			cast = test.asciicasts[cid];
+			var castPath = pkg.castMap.get(name);
+			var cid = castPath.pop();
+			var castTest = pkg.TestFromPath(castPath);
+			cast = castTest.asciicasts[cid];
 		    }
 		    // Only add ended cast (the player cannot stream)
 		    if (m[3] == 'end') {
