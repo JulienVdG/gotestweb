@@ -21,8 +21,10 @@
 
                 {{#if run.testFailCount > 0 }}
                 <span class="badge badge-pill badge-danger runs-table">Failure</span>
-                {{else}}
+                {{elseif run.testPassCount + run.testSkipCount == run.testCount }}
                 <span class="badge badge-pill badge-success runs-table">Success</span>
+                {{else}}
+                <span class="badge badge-pill badge-warning runs-table">Running...</span>
                 {{/if}}
             </div>
         </div>
