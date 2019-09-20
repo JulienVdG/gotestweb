@@ -47,7 +47,7 @@
 	</div>
     </div>
     <div class="row">
-	<div class="col{{#if .asciicasts.length }} test-asciicasts-side{{/if}}">
+	<div class="col{{#if ./asciicasts.length }} test-asciicasts-side{{/if}}">
 	    <div class="test-details">
 		{{#each groupEmbed:k}}
 		{{#if .type === 'Output' }}
@@ -62,9 +62,9 @@
 		{{/each}}
 	    </div>
 	</div>
-	{{#if .asciicasts.length }}
+	{{#if ./asciicasts.length }}
 	<div class="col text-center test-asciicast-container">
-	    {{#each .asciicasts}}
+	    {{#each ./asciicasts}}
 	    <div class="test-asciicast">
 		{{{ .tag }}}
 		<hr/>
