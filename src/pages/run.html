@@ -49,7 +49,7 @@
 {{#each run.packages:i}}
 {{#each .tests:j}}
 {{#with String(i).concat("-",j) as testkey}}
-<div class="row {{#if hasLongContent}}margin-row{{/if}} {{#if .status === "FAIL"}}no-margin{{/if}}" id="test-margin-row-{{ testkey }}">
+<div class="row {{#if hasLongContent}}margin-row{{/if}} {{#if .status === "FAIL"}}no-margin{{/if}}{{#unless .status}}no-margin{{/unless}}" id="test-margin-row-{{ testkey }}">
     <div class="col-lg-2 col-sm-1 test-margin">
     </div>
     <div class="col">
