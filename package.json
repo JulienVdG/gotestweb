@@ -31,7 +31,7 @@
     "asciinema-player": "^2.6.1",
     "bootstrap": "^4.3.1",
     "hasher": "1.2.0",
-    "jquery": "^3.4.0",
+    "jquery": "^3.5.0",
     "moment": "^2.18.1",
     "ractive": "^1.3.8",
     "requirejs": "2.3.6",
